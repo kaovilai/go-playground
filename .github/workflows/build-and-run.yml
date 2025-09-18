@@ -2,9 +2,7 @@ name: Build and Run Go Program
 
 on:
   push:
-    branches: [ main ]
   pull_request:
-    branches: [ main ]
 
 jobs:
   build-and-run:
