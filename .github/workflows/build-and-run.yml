@@ -18,5 +18,32 @@ jobs:
     - name: Build the program
       run: go build -v .
 
-    - name: Run the program
-      run: ./go-playground
+    - name: Create results directory
+      run: mkdir -p results
+
+    - name: Run the program and capture output
+      run: |
+        # Generate timestamp for filenames
+        TIMESTAMP=$(date +"%Y%m%d-%H%M%S")
+        
+        # Run the program and capture both stdout and stderr
+        ./go-playground > results/output-${TIMESTAMP}.txt 2> results/error-${TIMESTAMP}.txt
+        
+        # Display the outputs to the workflow log as well
+        echo "=== Program Output ==="
+        cat results/output-${TIMESTAMP}.txt
+        
+        # Show error file if it has content
+        if [ -s results/error-${TIMESTAMP}.txt ]; then
+          echo "=== Program Errors ==="
+          cat results/error-${TIMESTAMP}.txt
+        else
+          echo "=== No errors produced ==="
+        fi
+
+    - name: Upload execution logs
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: execution-logs-${{ github.run_number }}
+        path: results/
