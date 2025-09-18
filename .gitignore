@@ -16,3 +16,6 @@ go-playground
 
 # Go workspace file
 go.work
+
+# Results directory with output files
+results/
